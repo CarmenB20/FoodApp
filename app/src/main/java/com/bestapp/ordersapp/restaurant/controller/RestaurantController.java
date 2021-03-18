@@ -9,8 +9,10 @@ import com.bestapp.ordersapp.restaurant.model.persistance.FoodCategoryEntity;
 import com.bestapp.ordersapp.restaurant.model.persistance.RestaurantEntity;
 import com.bestapp.ordersapp.restaurant.service.FoodCategoryService;
 import com.bestapp.ordersapp.restaurant.service.RestaurantServiceImpl;
+import com.bestapp.ordersapp.security.jwt.JWTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,15 +24,17 @@ public class RestaurantController {
     private UserService userService;
     private EmailSender emailSender;
     private FoodCategoryService foodCategoryService;
+    private JWTokenProvider jwTokenProvider;
 
     @Autowired
     public RestaurantController(RestaurantServiceImpl restaurantServiceImpl,
                                 UserService userService,
-                                EmailSender emailSender, FoodCategoryService foodCategoryService){
+                                EmailSender emailSender, FoodCategoryService foodCategoryService, JWTokenProvider jwTokenProvider){
         this.restaurantServiceImpl = restaurantServiceImpl;
         this.userService = userService;
         this.emailSender = emailSender;
         this.foodCategoryService = foodCategoryService;
+        this.jwTokenProvider = jwTokenProvider;
     }
 
     @PostMapping("/registerRestaurant")
@@ -58,9 +62,17 @@ public class RestaurantController {
     }
 
 
+    @PreAuthorize("hasRole('ROLE_RESTAURANT')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?>deleteRestaurant(@PathVariable long id){
-        userService.deleteUser(restaurantServiceImpl.getRestaurantById(id).getUserEntity());
+    public ResponseEntity<?>deleteRestaurant(@PathVariable long id,
+                                             @RequestHeader("Authorization")String jwt){
+        UserEntity userEntity = restaurantServiceImpl.getRestaurantById(id).getUserEntity();
+
+        String email = jwTokenProvider.getUserEmailFromJWT(jwt);
+        if(!userEntity.getEmail().equals(email)){
+            throw new ForbiddenActionException("You do not have access to this restaurant!");
+        }
+
         return ResponseEntity.noContent().build();
     }
 
