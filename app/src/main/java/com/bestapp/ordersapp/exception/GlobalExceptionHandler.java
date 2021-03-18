@@ -8,12 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@ControllerAdvice(assignableTypes = AuthenticationController.class)
-public class GlobalExceptionHandler {
+@ControllerAdvice
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(WeakPasswordException.class)
     public ResponseEntity<ApiError> handleWeakPass(WeakPasswordException e,
@@ -57,6 +58,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.NOT_ACCEPTABLE);
 
 
+    }
+    @ExceptionHandler(ForbiddenActionException.class)
+    public ResponseEntity<ApiError> handleForbiddenActionException(ForbiddenActionException e,
+                                                                   HttpServletRequest request) {
+        ApiError apiError = new ApiError(403, e.getMessage(), request.getContextPath());
+        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
     }
 
 

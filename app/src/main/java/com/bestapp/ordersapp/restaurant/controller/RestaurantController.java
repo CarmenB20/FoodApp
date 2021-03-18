@@ -4,6 +4,7 @@ import com.bestapp.ordersapp.authentication.model.persitance.Role;
 import com.bestapp.ordersapp.authentication.model.persitance.UserEntity;
 import com.bestapp.ordersapp.authentication.service.UserService;
 import com.bestapp.ordersapp.email.EmailSender;
+import com.bestapp.ordersapp.exception.ForbiddenActionException;
 import com.bestapp.ordersapp.restaurant.model.dto.RestaurantDTO;
 import com.bestapp.ordersapp.restaurant.model.persistance.FoodCategoryEntity;
 import com.bestapp.ordersapp.restaurant.model.persistance.RestaurantEntity;
