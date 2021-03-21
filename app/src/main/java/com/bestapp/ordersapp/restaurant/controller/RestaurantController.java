@@ -83,7 +83,7 @@ public class RestaurantController {
                                                             @RequestBody RestaurantEntity restaurantUpdated) {
 
         RestaurantEntity restaurantEntity = restaurantServiceImpl.getRestaurantById(id);
-        if(restaurantEntity.getId() != id ){ //github
+        if(restaurantEntity.getId() != id ){ 
             throw new ForbiddenActionException("You do not have access to this restaurant!");
         }
         restaurantServiceImpl.updateRestaurant(id, restaurantUpdated);
