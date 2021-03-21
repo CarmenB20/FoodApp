@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
-public class CustomerServiceImpl {
+public class CustomerServiceImpl implements CustomerService{
 
     private CustomerRepository customerRepository;
     private UserService userService;
@@ -43,5 +43,14 @@ public class CustomerServiceImpl {
         return customerRepository.findById(id).orElseThrow(() ->
                 new UserNotFoundException("Customer with id:" + id + "does not exist!"));
 
+    }
+    public CustomerEntity updateCustomer(CustomerEntity customerEntity, long customerId){
+        CustomerEntity customer = getCustomerById(customerId);
+
+        customer.setName(customer.getName().toLowerCase());
+        customer.setAddress(customer.getAddress().toLowerCase());
+        customer.setPhone_number(customer.getPhone_number());
+
+        return this.customerRepository.save(customer);
     }
 }

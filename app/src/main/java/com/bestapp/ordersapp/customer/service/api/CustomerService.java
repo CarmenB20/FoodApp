@@ -14,6 +14,6 @@ public interface CustomerService {
     public CustomerEntity getCustomerById(long id);
 
     public CustomerEntity updateCustomer(CustomerEntity updatedCustomer,
-                                         long userId, long id);
+                                         long id);
 
 }

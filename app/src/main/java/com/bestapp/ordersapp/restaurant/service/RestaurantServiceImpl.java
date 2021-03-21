@@ -48,5 +48,17 @@ public class RestaurantServiceImpl implements RestaurantService {
     public List<RestaurantEntity> getAll() {
         return restaurantRepository.findAll();
     }
+
+    public RestaurantEntity updateRestaurant(long id, RestaurantEntity restaurantUpdated){
+        RestaurantEntity restaurant = getRestaurantById(id);
+        restaurant.setDescription(restaurant.getDescription().toLowerCase());
+        restaurant.setClosing_hour(restaurant.getClosing_hour());
+        restaurant.setOpen_hour(restaurant.getOpen_hour());
+        restaurant.setLocation(restaurant.getLocation().toLowerCase());
+        restaurant.setName(restaurant.getName().toLowerCase());
+
+        return restaurantRepository.save(restaurant);
+
+    }
 }
 

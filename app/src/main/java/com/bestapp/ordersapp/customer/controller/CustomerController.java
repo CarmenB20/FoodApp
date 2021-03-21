@@ -5,6 +5,7 @@ import com.bestapp.ordersapp.authentication.model.persitance.UserEntity;
 import com.bestapp.ordersapp.authentication.service.UserService;
 import com.bestapp.ordersapp.customer.model.dto.CustomerDTO;
 import com.bestapp.ordersapp.customer.model.persistance.CustomerEntity;
+import com.bestapp.ordersapp.customer.service.api.CustomerService;
 import com.bestapp.ordersapp.customer.service.api.CustomerServiceImpl;
 import com.bestapp.ordersapp.email.EmailSender;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +18,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/customers")
 public class CustomerController {
-    private CustomerServiceImpl customerServiceImpl;
+    private CustomerService customerService;
     private UserService userService;
     private EmailSender emailSender;
 
     @Autowired
     public CustomerController(CustomerServiceImpl customerServiceImpl, UserService userService, EmailSender emailSender) {
-        this.customerServiceImpl = customerServiceImpl;
+        this.customerService= customerServiceImpl;
         this.userService = userService;
         this.emailSender = emailSender;
     }
@@ -34,7 +35,7 @@ public class CustomerController {
         UserEntity userEntity = userService.createUser(customerDTO.getPassword(),
                 customerDTO.getEmail(), Role.ROLE_CUSTOMER);
 
-        customerServiceImpl.createCustomer(customerDTO.getName(),
+        customerService.createCustomer(customerDTO.getName(),
                 customerDTO.getPhone_number(),
                 customerDTO.getAddress(),
                 userEntity);
@@ -51,16 +52,23 @@ public class CustomerController {
 
     @GetMapping
     public ResponseEntity<List<CustomerEntity>>getAllCustomers(){
-        return ResponseEntity.ok(customerServiceImpl.getAll());
+        return ResponseEntity.ok(customerService.getAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CustomerEntity>getCustomerById(@PathVariable long id){
-        return ResponseEntity.ok(customerServiceImpl.getCustomerById(id));
+        return ResponseEntity.ok(customerService.getCustomerById(id));
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<?>deleteCustomer(@PathVariable long id){
-        userService.deleteUser(customerServiceImpl.getCustomerById(id).getUserEntity());
+        userService.deleteUser(customerService.getCustomerById(id).getUserEntity());
         return ResponseEntity.noContent().build();
+    }
+    @PutMapping("{id}")
+    public ResponseEntity<CustomerEntity>updateCustomer(@PathVariable long id,
+                                                        @RequestBody CustomerEntity customerEntity){
+        customerService.getCustomerById(id);
+        customerService.updateCustomer(customerEntity, id);
+        return ResponseEntity.ok(customerEntity);
     }
 }

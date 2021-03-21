@@ -77,6 +77,20 @@ public class RestaurantController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasRole('ROLE_RESTAURANT')")
+    @PutMapping("/{id}")
+    public ResponseEntity<RestaurantEntity>updateRestaurant(@PathVariable long id,
+                                                            @RequestBody RestaurantEntity restaurantUpdated) {
+
+        RestaurantEntity restaurantEntity = restaurantServiceImpl.getRestaurantById(id);
+        if(restaurantEntity.getId() != id ){ //github
+            throw new ForbiddenActionException("You do not have access to this restaurant!");
+        }
+        restaurantServiceImpl.updateRestaurant(id, restaurantUpdated);
+        return ResponseEntity.ok(restaurantUpdated);
+    }
+
+
     @GetMapping("/{id}")
     public ResponseEntity<RestaurantEntity>getRestaurant(@PathVariable long id){
         return ResponseEntity.ok(restaurantServiceImpl.getRestaurantById(id));
