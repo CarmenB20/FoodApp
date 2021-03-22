@@ -65,6 +65,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ApiError apiError = new ApiError(403, e.getMessage(), request.getContextPath());
         return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
     }
+    @ExceptionHandler(FoodItemNotFoundException.class)
+    public ResponseEntity<ApiError> handleFoodItemNotFoundException(FoodItemNotFoundException e,
+                                                       HttpServletRequest request) {
+        ApiError apiError = new ApiError(404, e.getMessage(), request.getContextPath());
+        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
 
 
 
