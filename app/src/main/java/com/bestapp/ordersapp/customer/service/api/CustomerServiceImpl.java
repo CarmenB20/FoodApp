@@ -47,9 +47,9 @@ public class CustomerServiceImpl implements CustomerService{
     public CustomerEntity updateCustomer(CustomerEntity customerEntity, long customerId){
         CustomerEntity customer = getCustomerById(customerId);
 
-        customer.setName(customer.getName().toLowerCase());
-        customer.setAddress(customer.getAddress().toLowerCase());
-        customer.setPhone_number(customer.getPhone_number());
+        customer.setName(customerEntity.getName().toLowerCase());
+        customer.setAddress(customerEntity.getAddress().toLowerCase());
+        customer.setPhone_number(customerEntity.getPhone_number());
 
         return this.customerRepository.save(customer);
     }
