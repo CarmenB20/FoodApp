@@ -6,6 +6,7 @@ import com.bestapp.ordersapp.restaurant.model.persistance.FoodCategoryEntity;
 import com.bestapp.ordersapp.restaurant.service.FoodCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,7 +21,7 @@ public class FoodItemController {
         this.foodItemService = foodItemService;
         this.foodCategoryService = foodCategoryService;
     }
-    //TODO limit this to restaurants only
+    @PreAuthorize("hasRole('ROLE_RESTAURANT')")
     @PostMapping("/{foodCategoryId}/foodItem")
     public ResponseEntity<FoodItemEntity> createFoodItem(@PathVariable long foodCategoryId,
                                                          @RequestBody FoodItemEntity foodItemEntity){
@@ -29,5 +30,10 @@ public class FoodItemController {
         return ResponseEntity.ok(foodItemService.createFoodItem(foodCategoryId, foodItemEntity));
 
 
+    }
+    @DeleteMapping("/{foodCategoryId}/{id}")
+    public ResponseEntity deleteFoodItem(@PathVariable long id){
+        foodItemService.deleteFoodItem(id);
+        return ResponseEntity.ok("Food Item with id " + id + "deleted!");
     }
 }

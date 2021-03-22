@@ -22,4 +22,7 @@ public class FoodItemService {
         }
         return foodItemRepository.save(foodItemEntity);
     }
+    public void deleteFoodItem(long foodItemId){
+        foodItemRepository.deleteItemById(foodItemId);
+    }
 }

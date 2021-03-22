@@ -120,6 +120,7 @@ public class RestaurantController {
     }
 
 
+    @PreAuthorize("hasRole('ROLE_RESTAURANT')")
     @PutMapping("/{restaurantId}/foodCategories/{foodCategoryId}")
     public ResponseEntity<FoodCategoryEntity>updateFoodCategory(@PathVariable long foodCategoryId,
                                                                 @RequestBody FoodCategoryEntity foodCategoryEntity,
@@ -137,6 +138,7 @@ public class RestaurantController {
         List<FoodCategoryEntity>foodCategoryEntities = foodCategoryService.getAllFoodCategories(restaurantId);
         return ResponseEntity.ok(foodCategoryEntities);
     }
+    @PreAuthorize("hasRole('ROLE_RESTAURANT')")
     @DeleteMapping("/{restaurantId}/foodCategories/{foodCategoryId}")
     public ResponseEntity deleteFoodCategoryById(@PathVariable long foodCategoryId,
                                                  @PathVariable long restaurantId){
