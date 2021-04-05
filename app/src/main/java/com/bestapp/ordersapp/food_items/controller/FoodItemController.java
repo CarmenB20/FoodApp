@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/foodCategory")
 public class FoodItemController {
@@ -42,5 +44,12 @@ public class FoodItemController {
         foodItemService.getFoodItemById(id);
         foodItemService.updateFoodItem(id, foodItemEntity);
         return ResponseEntity.ok(foodItemEntity);
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<List<FoodItemEntity>>getAllFoodItems(@PathVariable long id){
+        foodCategoryService.getFoodCategory(id);
+
+        List<FoodItemEntity> foodItemEntities = foodItemService.getAllFoodItems(id);
+        return ResponseEntity.ok(foodItemEntities);
     }
 }
