@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,6 +20,10 @@ public interface FoodItemRepository  extends JpaRepository<FoodItemEntity, Long>
     @Transactional
     @Query(value = "delete from orders.food_items where id = :foodItemId", nativeQuery = true)
     void deleteItemById(long foodItemId);
+
+    @Query(value = "select * from orders.food_items where food_category_id = :foodCategoryId", nativeQuery = true)
+    List<FoodItemEntity> getFoodItemByFoodCategory(long foodCategoryId);
+
 
 }
 
