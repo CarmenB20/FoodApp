@@ -4,6 +4,8 @@ import com.bestapp.ordersapp.authentication.service.AppUserDetailsService;
 import com.bestapp.ordersapp.security.jwt.JWTAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,7 +31,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
             "/api/v1/restaurants/**",
             "/api/v1/customers/**",
             "/api/v1/login",
-            "/api/v1/forgotPassword"
+            "/api/v1/logout",
+            "/api/v1/forgotPassword",
+            "/api/v1/foodCategory"
     };
 
     private AppUserDetailsService userDetailsService;
@@ -81,6 +85,19 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     @Bean
     public JWTAuthenticationFilter jwtAuthenticationFilter() {
         return new JWTAuthenticationFilter();
+
+    }
+
+    @Bean
+    JedisConnectionFactory jedisConnectionFactory(){
+        return new JedisConnectionFactory();
+    }
+
+    @Bean
+    RedisTemplate<String, String> redisTemplate(){
+        RedisTemplate<String, String > redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(jedisConnectionFactory());
+        return redisTemplate;
     }
 
 
