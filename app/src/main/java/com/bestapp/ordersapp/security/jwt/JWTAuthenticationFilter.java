@@ -22,6 +22,8 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private AppUserDetailsService appUserDetailsService;
     @Autowired
     private JWTokenProvider tokenProvider;
+    @Autowired
+    private JWTRedisService jwtRedisService;
 
 
     @Override
@@ -32,7 +34,8 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             String jwt = tokenProvider.getJwtFromRequest(request);
-            if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
+            if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt) &&
+                                                         !jwtRedisService.isJwtBlackListed(jwt)){
 
                 String userEmail  = tokenProvider.getUserEmailFromJWT(jwt);
                 UserDetails userDetails = appUserDetailsService.loadUserByUsername(userEmail);
