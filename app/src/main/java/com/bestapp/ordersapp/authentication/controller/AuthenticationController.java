@@ -4,12 +4,11 @@ import com.bestapp.ordersapp.authentication.model.dto.ForgotPasswordDTO;
 import com.bestapp.ordersapp.authentication.model.dto.JWTokenDTO;
 import com.bestapp.ordersapp.authentication.model.dto.LoginRequest;
 import com.bestapp.ordersapp.authentication.model.dto.ResetPasswordDTO;
-import com.bestapp.ordersapp.authentication.model.persitance.UserEntity;
 import com.bestapp.ordersapp.authentication.service.UserService;
 import com.bestapp.ordersapp.email.EmailSender;
+import com.bestapp.ordersapp.security.jwt.JWTRedisService;
 import com.bestapp.ordersapp.security.jwt.JWTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,19 +19,22 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1")
 public class AuthenticationController {
+
     private AuthenticationManager authenticationManager;
     private JWTokenProvider tokenProvider;
     private UserService userService;
     private EmailSender emailSender;
+    private JWTRedisService jwtRedisService;
 
     @Autowired
     public AuthenticationController(AuthenticationManager authenticationManager,
                                     JWTokenProvider tokenProvider,
-                                    UserService userService, EmailSender emailSender) {
+                                    UserService userService, EmailSender emailSender, JWTRedisService jwtRedisService) {
         this.authenticationManager = authenticationManager;
         this.tokenProvider         = tokenProvider;
         this.userService           = userService;
         this.emailSender = emailSender;
+        this.jwtRedisService = jwtRedisService;
     }
 
     @PostMapping("/login")
@@ -80,5 +82,13 @@ public class AuthenticationController {
     }
 
 
+    @PostMapping("/logout")
+    public ResponseEntity<?>logout(@RequestHeader ("Authorization") String jwt){
+
+        String userEmail = tokenProvider.getUserEmailFromJWT(jwt);
+        jwtRedisService.invalidateJwt(jwt, userEmail);
+
+        return ResponseEntity.ok().build();
+    }
     }
 
