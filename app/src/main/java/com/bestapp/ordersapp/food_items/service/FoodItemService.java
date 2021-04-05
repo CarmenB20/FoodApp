@@ -7,6 +7,8 @@ import com.bestapp.ordersapp.food_items.model.persistance.FoodItemEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class FoodItemService {
     private FoodItemRepository foodItemRepository;
@@ -40,5 +42,8 @@ public class FoodItemService {
     public FoodItemEntity getFoodItemById(long id){
         return foodItemRepository.findById(id).orElseThrow(() ->
                 new FoodItemNotFoundException("Food item not found!"));
+    }
+    public List<FoodItemEntity> getAllFoodItems(long foodCategoryId){
+        return foodItemRepository.getFoodItemByFoodCategory(foodCategoryId);
     }
 }
