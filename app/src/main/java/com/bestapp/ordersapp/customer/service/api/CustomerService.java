@@ -16,4 +16,5 @@ public interface CustomerService {
     public CustomerEntity updateCustomer(CustomerEntity updatedCustomer,
                                          long id);
 
+    public CustomerEntity getCustomerByEmail(String email);
 }
