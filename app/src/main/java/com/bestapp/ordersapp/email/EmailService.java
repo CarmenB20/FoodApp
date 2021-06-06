@@ -31,7 +31,7 @@ public class EmailService implements EmailSender{
             Session session = Session.getInstance(this.mailSender.getJavaMailProperties(),
                     new javax.mail.Authenticator() {
                         protected PasswordAuthentication getPasswordAuthentication() {
-                            return new PasswordAuthentication("javatest487@gmail.com", "testjava123");
+                            return new PasswordAuthentication("javatest487@gmail.com", "**********");
                         }
                     });
             MimeMessage mimeMessage = new MimeMessage(session);
